@@ -10,7 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <tbb/task_scheduler_init.h>
+//#include <tbb/task_scheduler_init.h>
 #include <omp.h>
 
 #include <util/timer.h>
@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     }
 
     // Set the number of threads to use.
-    tbb::task_scheduler_init schedule(conf.num_threads > 0 ? conf.num_threads : tbb::task_scheduler_init::automatic);
+    //tbb::task_scheduler_init schedule(conf.num_threads > 0 ? conf.num_threads : tbb::task_scheduler_init::automatic);
     if (conf.num_threads > 0) {
         omp_set_dynamic(0);
         omp_set_num_threads(conf.num_threads);
@@ -172,7 +172,7 @@ int main(int argc, char **argv) {
         } else {
             ProgressCounter texture_patch_counter("Calculating validity masks for texture patches", texture_patches.size());
             #pragma omp parallel for schedule(dynamic)
-            for (std::size_t i = 0; i < texture_patches.size(); ++i) {
+            for (std::int64_t i = 0; i < static_cast<std::int64_t>(texture_patches.size()); ++i) {
                 texture_patch_counter.progress<SIMPLE>();
                 TexturePatch::Ptr texture_patch = texture_patches[i];
                 std::vector<math::Vec3f> patch_adjust_values(texture_patch->get_faces().size() * 3, math::Vec3f(0.0f));

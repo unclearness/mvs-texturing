@@ -55,5 +55,8 @@ link_directories(
     ${CMAKE_SOURCE_DIR}/elibs/mve/libs/util
 )
 
+add_subdirectory(elibs/mve)
+add_subdirectory(elibs/rayint)
+
 add_subdirectory(libs)
 add_subdirectory(apps)

@@ -65,13 +65,6 @@ multi_gauss_unnormalized(Eigen::Matrix<T, 1, N> const & X, Eigen::Matrix<T, 1, N
     return std::exp(T(-0.5) * mean_removed * covariance_inv * mean_removed.adjoint());
 }
 
-double const multi_gauss_unnormalized(Eigen::RowVector3d const & X, Eigen::RowVector3d  const & mu,
-  Eigen::Matrix3d const & covariance_inv) {
-
-  Eigen::RowVector3d  mean_removed = X - mu;
-  return std::exp((-0.5) * mean_removed * covariance_inv * mean_removed.adjoint());
-}
-
 /** Return the number suffix for n, e.g. 3 -> "rd". */
 inline
 std::string number_suffix(int n) {

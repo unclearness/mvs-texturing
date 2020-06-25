@@ -255,7 +255,7 @@ global_seam_leveling(UniGraph const & graph, mve::TriangleMesh::ConstPtr mesh,
     util::WallTimer timer;
     std::cout << "\tCalculating adjustments:"<< std::endl;
     #pragma omp parallel for
-    for (std::size_t channel = 0; channel < 3; ++channel) {
+    for (std::int32_t channel = 0; channel < 3; ++channel) {
         /* Prepare solver. */
         Eigen::ConjugateGradient<SpMat, Eigen::Lower> cg;
         cg.setMaxIterations(1000);

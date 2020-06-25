@@ -24,6 +24,13 @@ typedef acc::BVHTree<unsigned int, math::Vec3f> BVHTree;
 
 TEX_NAMESPACE_BEGIN
 
+double const multi_gauss_unnormalized(Eigen::Matrix<double, 1, 3> const & X, Eigen::Matrix<double, 1, 3> const & mu,
+  Eigen::Matrix<double, 3, 3> const & covariance_inv) {
+
+  Eigen::Matrix<double, 1, 3> mean_removed = X - mu;
+  return std::exp(double(-0.5) * mean_removed * covariance_inv * mean_removed.adjoint());
+}
+
 /**
  * Dampens the quality of all views in which the face's projection
  * has a much different color than in the majority of views.
