@@ -150,7 +150,7 @@ calculate_face_projection_infos(mve::TriangleMesh::ConstPtr mesh,
         std::vector<std::pair<std::size_t, FaceProjectionInfo> > projected_face_view_infos;
 
         #pragma omp for schedule(dynamic)
-        for (std::uint16_t j = 0; j < static_cast<std::uint16_t>(num_views); ++j) {
+        for (std::int32_t j = 0; j < static_cast<std::int32_t>(num_views); ++j) {
             view_counter.progress<SIMPLE>();
 
             TextureView * texture_view = &texture_views->at(j);
@@ -258,7 +258,7 @@ postprocess_face_infos(Settings const & settings,
     ProgressCounter face_counter("\tPostprocessing face infos",
         face_projection_infos->size());
     #pragma omp parallel for schedule(dynamic)
-    for (std::size_t i = 0; i < face_projection_infos->size(); ++i) {
+    for (std::int64_t i = 0; i < static_cast<std::int64_t>(face_projection_infos->size()); ++i) {
         face_counter.progress<SIMPLE>();
 
         std::vector<FaceProjectionInfo> & infos = face_projection_infos->at(i);

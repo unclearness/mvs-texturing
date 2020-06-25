@@ -11,10 +11,10 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 #Search for TBB library (release build)
-set(CMAKE_BUILD_TYPE_BACKUP ${CMAKE_BUILD_TYPE})
-set(CMAKE_BUILD_TYPE RELEASE)
-FIND_PACKAGE(TBB REQUIRED)
-set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_BACKUP})
+# set(CMAKE_BUILD_TYPE_BACKUP ${CMAKE_BUILD_TYPE})
+# set(CMAKE_BUILD_TYPE RELEASE)
+# FIND_PACKAGE(TBB REQUIRED)
+# set(CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_BACKUP})
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED yes)
@@ -41,9 +41,9 @@ include_directories(SYSTEM
     ${CMAKE_SOURCE_DIR}/elibs/rayint/libs
     ${CMAKE_SOURCE_DIR}/elibs/mve/libs
     ${CMAKE_SOURCE_DIR}/elibs/eigen
-    ${CMAKE_SOURCE_DIR}/elibs/mapmap/
-    ${CMAKE_SOURCE_DIR}/elibs/mapmap/mapmap
-    ${CMAKE_SOURCE_DIR}/elibs/mapmap/ext/dset
+    # ${CMAKE_SOURCE_DIR}/elibs/mapmap/
+    # ${CMAKE_SOURCE_DIR}/elibs/mapmap/mapmap
+    # ${CMAKE_SOURCE_DIR}/elibs/mapmap/ext/dset
 )
 
 include_directories(

@@ -116,9 +116,9 @@ generate_texture_atlases(std::vector<TexturePatch::Ptr> * orig_texture_patches,
     std::size_t remaining_patches = texture_patches.size();
     std::ofstream tty("/dev/tty", std::ios_base::out);
 
-    #pragma omp parallel
+    //#pragma omp parallel
     {
-    #pragma omp single
+    //#pragma omp single
     {
 
     while (!texture_patches.empty()) {
@@ -148,7 +148,7 @@ generate_texture_atlases(std::vector<TexturePatch::Ptr> * orig_texture_patches,
             }
         }
 
-        #pragma omp task
+        //#pragma omp task
         texture_atlas->finalize();
     }
 
@@ -156,7 +156,7 @@ generate_texture_atlases(std::vector<TexturePatch::Ptr> * orig_texture_patches,
         << " 100%... done." << std::endl;
     util::WallTimer timer;
     std::cout << "\tFinalizing texture atlases... " << std::flush;
-    #pragma omp taskwait
+    //#pragma omp taskwait
     std::cout << "done. (Took: " << timer.get_elapsed_sec() << "s)" << std::endl;
 
     /* End of single region */

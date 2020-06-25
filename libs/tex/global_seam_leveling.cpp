@@ -294,7 +294,7 @@ global_seam_leveling(UniGraph const & graph, mve::TriangleMesh::ConstPtr mesh,
 
     ProgressCounter texture_patch_counter("\tAdjusting texture patches", texture_patches->size());
     #pragma omp parallel for schedule(dynamic)
-    for (std::size_t i = 0; i < texture_patches->size(); ++i) {
+    for (std::int64_t i = 0; i < static_cast<std::int64_t>(texture_patches->size()); ++i) {
         texture_patch_counter.progress<SIMPLE>();
 
         TexturePatch::Ptr texture_patch = texture_patches->at(i);
