@@ -36,11 +36,15 @@ find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(TIFF REQUIRED)
 
-#add_subdirectory(elibs)
+add_subdirectory(third_party/mve)
+add_subdirectory(third_party/rayint)
+
 include_directories(SYSTEM
-    ${CMAKE_SOURCE_DIR}/elibs/rayint/libs
-    ${CMAKE_SOURCE_DIR}/elibs/mve/libs
+    #${CMAKE_SOURCE_DIR}/elibs/rayint/libs
+    #${CMAKE_SOURCE_DIR}/elibs/mve/libs
     ${CMAKE_SOURCE_DIR}/elibs/eigen
+    ${CMAKE_SOURCE_DIR}/third_party/mve/libs
+    ${CMAKE_SOURCE_DIR}/third_party/rayint/libs
     # ${CMAKE_SOURCE_DIR}/elibs/mapmap/
     # ${CMAKE_SOURCE_DIR}/elibs/mapmap/mapmap
     # ${CMAKE_SOURCE_DIR}/elibs/mapmap/ext/dset
@@ -50,16 +54,10 @@ include_directories(
     libs
 )
 
-link_directories(
-    ${CMAKE_SOURCE_DIR}/elibs/mve/libs/mve
-    ${CMAKE_SOURCE_DIR}/elibs/mve/libs/util
-)
-
-#add_subdirectory(elibs/mve)
-#add_subdirectory(elibs/rayint)
-
-add_subdirectory(third_party/mve)
-add_subdirectory(third_party/rayint)
+#link_directories(
+#    ${CMAKE_SOURCE_DIR}/elibs/mve/libs/mve
+#    ${CMAKE_SOURCE_DIR}/elibs/mve/libs/util
+#)
 
 add_subdirectory(libs)
 add_subdirectory(apps)
