@@ -36,13 +36,19 @@ find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(TIFF REQUIRED)
 
+if(NOT DEFINED EIGEN3_INCLUDE_DIR)
+  #set_with_parent(EIGEN3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/eigen" "eigen installed directory" PARENT_SCOPE)
+  set(EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/elibs/eigen)
+message("EIGEN3_INCLUDE_DIR: ${EIGEN3_INCLUDE_DIR}") 
+endif()
+
 add_subdirectory(third_party/mve)
 add_subdirectory(third_party/rayint)
 
 include_directories(SYSTEM
     #${CMAKE_SOURCE_DIR}/elibs/rayint/libs
     #${CMAKE_SOURCE_DIR}/elibs/mve/libs
-    ${CMAKE_SOURCE_DIR}/elibs/eigen
+    ${EIGEN3_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/third_party/mve/libs
     ${CMAKE_SOURCE_DIR}/third_party/rayint/libs
     # ${CMAKE_SOURCE_DIR}/elibs/mapmap/
