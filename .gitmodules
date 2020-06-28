@@ -4,3 +4,6 @@
 [submodule "elibs/rayint"]
 	path = elibs/rayint
 	url = https://github.com/nmoehrle/rayint.git
+[submodule "elibs/eigen"]
+	path = elibs/eigen
+	url = https://gitlab.com/libeigen/eigen.git

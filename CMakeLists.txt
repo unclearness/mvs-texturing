@@ -36,7 +36,7 @@ find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(TIFF REQUIRED)
 
-add_subdirectory(elibs)
+#add_subdirectory(elibs)
 include_directories(SYSTEM
     ${CMAKE_SOURCE_DIR}/elibs/rayint/libs
     ${CMAKE_SOURCE_DIR}/elibs/mve/libs
@@ -55,8 +55,11 @@ link_directories(
     ${CMAKE_SOURCE_DIR}/elibs/mve/libs/util
 )
 
-add_subdirectory(elibs/mve)
-add_subdirectory(elibs/rayint)
+#add_subdirectory(elibs/mve)
+#add_subdirectory(elibs/rayint)
+
+add_subdirectory(third_party/mve)
+add_subdirectory(third_party/rayint)
 
 add_subdirectory(libs)
 add_subdirectory(apps)
