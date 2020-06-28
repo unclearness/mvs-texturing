@@ -1,0 +1,6 @@
+[submodule "elibs/mve"]
+	path = elibs/mve
+	url = https://github.com/andre-schulz/mve.git
+[submodule "elibs/rayint"]
+	path = elibs/rayint
+	url = https://github.com/nmoehrle/rayint.git
