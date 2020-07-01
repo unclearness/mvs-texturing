@@ -51,6 +51,7 @@ class TextureView {
         mve::ByteImage::Ptr gradient_magnitude;
         std::vector<bool> validity_mask;
 
+        mve::ByteImage::Ptr org_image;
 
     public:
         /** Returns the id of the TexureView which is consistent for every run. */
@@ -75,6 +76,7 @@ class TextureView {
 
         /** Constructs a TextureView from the give mve::CameraInfo containing the given image. */
         TextureView(std::size_t id, mve::CameraInfo const & camera, std::string const & image_file);
+        TextureView(std::size_t id, mve::CameraInfo const& camera, mve::ByteImage::Ptr const org_image);
 
         /** Returns the position. */
         math::Vec3f get_pos(void) const;

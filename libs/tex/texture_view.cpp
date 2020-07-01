@@ -39,6 +39,20 @@ TextureView::TextureView(std::size_t id, mve::CameraInfo const & camera,
     camera.fill_world_to_cam(*world_to_cam);
 }
 
+TextureView::TextureView(std::size_t id, mve::CameraInfo const& camera,
+  mve::ByteImage::Ptr const org_image) : id(id), image_file("") {
+
+      this->org_image = mve::ByteImage::create(*org_image);
+
+      width = org_image->width();
+      height = org_image->height();
+
+      camera.fill_calibration(*projection, width, height);
+      camera.fill_camera_pos(*pos);
+      camera.fill_viewing_direction(*viewdir);
+      camera.fill_world_to_cam(*world_to_cam);
+ }
+
 void
 TextureView::generate_validity_mask(void) {
     assert(image != NULL);
@@ -96,6 +110,12 @@ TextureView::generate_validity_mask(void) {
 void
 TextureView::load_image(void) {
     if(image != NULL) return;
+
+    if (image_file.empty() && org_image != nullptr) {
+      image = mve::ByteImage::create(*org_image);
+      return;
+    }
+
     image = mve::image::load_file(image_file);
 }
 
