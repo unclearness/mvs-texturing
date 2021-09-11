@@ -43,8 +43,10 @@ else()
 endif()
 include(CPack)
 
+if(NOT APPLE)
 find_package(OpenMP REQUIRED)
 add_compile_options(${OpenMP_CXX_FLAGS})
+endif()
 
 include_directories(libs)
 

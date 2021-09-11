@@ -11,7 +11,9 @@
 #include <fstream>
 #include <vector>
 //#include <tbb/task_scheduler_init.h>
+#ifdef UGU_USE_OPENMP
 #include <omp.h>
+#endif
 
 #include <util/timer.h>
 #include <util/system.h>
@@ -62,8 +64,10 @@ int main(int argc, char **argv) {
     // Set the number of threads to use.
     //tbb::task_scheduler_init schedule(conf.num_threads > 0 ? conf.num_threads : tbb::task_scheduler_init::automatic);
     if (conf.num_threads > 0) {
+#ifdef UGU_USE_OPENMP
         omp_set_dynamic(0);
         omp_set_num_threads(conf.num_threads);
+#endif
     }
 
     std::cout << "Load and prepare mesh: " << std::endl;

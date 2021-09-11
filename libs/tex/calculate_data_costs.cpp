@@ -221,7 +221,7 @@ calculate_face_projection_infos(mve::TriangleMesh::ConstPtr mesh,
                     if (!visible) continue;
                 }
 
-                FaceProjectionInfo info = {j, 0.0f, math::Vec3f(0.0f, 0.0f, 0.0f)};
+                FaceProjectionInfo info = {static_cast<uint16_t>(j), 0.0f, math::Vec3f(0.0f, 0.0f, 0.0f)};
 
                 /* Calculate quality. */
                 texture_view->get_face_info(v1, v2, v3, &info, settings);
