@@ -69,7 +69,8 @@ if (NOT PNG_FOUND)
     # TODO: Really?
     set(ZLIB_LIBRARY ${ZLIB_ROOT}/libz.a)
   endif()
-  set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib ${ZLIB_ROOT})
+  set(ZLIB_CONF_ROOT ${CMAKE_CURRENT_BINARY_DIR}/third_party/zlib) # For conf file generated at build time
+  set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib ${ZLIB_CONF_ROOT})
 
   set(PNG_STATIC ON)  # Static build of libpng
   set(PNG_SHARED OFF) # No shared build of libpng
@@ -82,8 +83,8 @@ if (NOT PNG_FOUND)
   endif()
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/libpng)
   set(PNG_FOUND TRUE)
-
-  set(PNG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libpng ${LIBPNG_ROOT})
+  set(LIBPNG_CONF_ROOT ${CMAKE_CURRENT_BINARY_DIR}/third_party/libpng) # For conf file generated at build time
+  set(PNG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libpng ${LIBPNG_CONF_ROOT} ${ZLIB_INCLUDE_DIR})
 
   # If add_subdirectory() by parent project
   # TODO: Fix
@@ -91,9 +92,6 @@ if (NOT PNG_FOUND)
 
   # Need explcitly link zlib
   target_link_libraries(png_static PRIVATE ${ZLIB_LIBRARY})
-
-  message(STATUS "ZLIB_INCLUDE_DIR:" ${ZLIB_INCLUDE_DIR})
-  message(STATUS "ZLIB_LIBRARIES:" ${ZLIB_LIBRARIES})
 
   if(WIN32)
     set(PNG_LIBRARY ${LIBPNG_ROOT}/$<CONFIG>/libpng16_static$<IF:$<CONFIG:Debug>,d,>.lib)
