@@ -50,27 +50,82 @@ endif()
 
 include_directories(libs)
 
-add_subdirectory(libs)
-#add_subdirectory(apps)
-#add_subdirectory(tests)
+find_package(PNG)
 
-# Install 3rd party libraries
-if(WIN32)
-    set(LIBPNG_DLL_DEBUG "3rdparty/bin/libpng16d.dll")
-    set(LIBPNG_DLL_RELEASE "3rdparty/bin/libpng16.dll")
-    set(ZLIB_DLL_DEBUG "3rdparty/bin/zlibd.dll")
-    set(ZLIB_DLL_RELEASE "3rdparty/bin/zlib.dll")
-    set(LIBTIFF_DLL_DEBUG "3rdparty/bin/tiffd.dll")
-    set(LIBTIFF_DLL_RELEASE "3rdparty/bin/tiff.dll")
-    set(GLEW_DLL_DEBUG "3rdparty/bin/glew32d.dll")
-    set(GLEW_DLL_RELEASE "3rdparty/bin/glew32.dll")
-    set(LIBJPEG_TURBO_DEBUG "3rdparty/bin/jpeg62d.dll")
-    set(LIBJPEG_TURBO_RELEASE "3rdparty/bin/jpeg62.dll")
-    install(FILES ${LIBPNG_DLL_RELEASE} ${ZLIB_DLL_RELEASE}
-        ${LIBTIFF_DLL_RELEASE} ${GLEW_DLL_RELEASE} ${LIBJPEG_TURBO_RELEASE}
-        DESTINATION . CONFIGURATIONS Release RelWithDebInfo)
-    install(FILES ${LIBPNG_DLL_DEBUG} ${ZLIB_DLL_DEBUG}
-        ${LIBTIFF_DLL_DEBUG} ${GLEW_DLL_DEBUG} ${LIBJPEG_TURBO_DEBUG}
-        DESTINATION . CONFIGURATIONS Debug)
+if (NOT PNG_FOUND)
+  # If not found, build it from source
+
+  # zlib for libpng
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib)
+  # FIND_LIBRARY(ZLIB_LIBRARIES
+  # NAMES
+  #   zlib
+  # PATHS
+  #   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib
+  #   ${CMAKE_CURRENT_BINARY_DIR}/zlib_build
+  # )
+  # FIND_PATH(ZLIB_INCLUDE_DIRS
+  # NAMES
+  # zlib.h
+  # PATHS
+  # ${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib
+  # ${CMAKE_CURRENT_BINARY_DIR}/zlib_build
+  # )
+  # message(STATUS "ZLIB_INCLUDE_DIR:" ${ZLIB_INCLUDE_DIR})
+  # message(STATUS "ZLIB_LIBRARIES:" ${ZLIB_LIBRARIES})
+
+  set(ZLIB_ROOT ${CMAKE_CURRENT_BINARY_DIR}/third_party/zlib) # zlibのルートディレクトリを設定
+  set(ZLIB_LIBRARY ${CMAKE_CURRENT_BINARY_DIR}/zlib/) # Static library for zlib
+  if(WIN32)
+    #set(ZLIB_LIBRARY ${ZLIB_ROOT}/Release/zlibstatic.lib)
+    set(ZLIB_LIBRARY ${ZLIB_ROOT}/$<CONFIG>/zlibstatic$<IF:$<CONFIG:Debug>,d,>.lib)
+  else()
+    # TODO: Really?
+    set(ZLIB_LIBRARY ${ZLIB_ROOT}/libzlib.a)
+  endif()
+  set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib ${ZLIB_ROOT})
+
+
+  set(PNG_STATIC ON)  # Static build of libpng
+  set(PNG_SHARED OFF) # No shared build of libpng
+  set(ZLIB_FOUND TRUE) # TO pass the check in libpng
+
+  set(LIBPNG_ROOT ${CMAKE_CURRENT_BINARY_DIR}/third_party/libpng)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/libpng)
+  set(PNG_FOUND TRUE)
+
+  set(PNG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libpng ${LIBPNG_ROOT})
+
+  # If add_subdirectory() by parent project
+  # TODO: Fix
+  cmake_policy(SET CMP0079 NEW)
+
+  # Need explcitly link zlib
+  target_link_libraries(png_static PRIVATE ${ZLIB_LIBRARY})
+
+  message(STATUS "ZLIB_INCLUDE_DIR:" ${ZLIB_INCLUDE_DIR})
+  message(STATUS "ZLIB_LIBRARIES:" ${ZLIB_LIBRARIES})
+
+  if(WIN32)
+    set(PNG_LIBRARY ${LIBPNG_ROOT}/$<CONFIG>/libpng16_static$<IF:$<CONFIG:Debug>,d,>.lib)
+  else()
+    # TODO: Really?
+    set(PNG_LIBRARY ${LIBPNG_ROOT}/libpng.a)
+  endif()
+  
+  set(PNG_LIBRARIES ${PNG_LIBRARY} ${ZLIB_LIBRARY})
 endif()
 
+find_package(JPEG)
+if (NOT JPEG_FOUND)
+    add_definitions(-DMVE_NO_JPEG_SUPPORT)
+    set(JPEG_LIBRARIES)
+endif()
+
+find_package(TIFF)
+if (NOT TIFF_FOUND)
+    add_definitions(-DMVE_NO_TIFF_SUPPORT)
+    set(TIFF_LIBRARIES)
+endif()
+
+add_subdirectory(libs)

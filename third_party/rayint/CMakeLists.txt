@@ -22,10 +22,6 @@ if(OPENMP_FOUND)
 endif()
 endif()
 
-find_package(PNG REQUIRED)
-find_package(JPEG REQUIRED)
-find_package(TIFF REQUIRED)
-
 #add_subdirectory(elibs)
 
 include_directories(SYSTEM ${CMAKE_SOURCE_DIR}/../mve/libs/)

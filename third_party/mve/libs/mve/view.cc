@@ -847,7 +847,9 @@ View::save_image_intern (ImageProxy* proxy)
     if (proxy->image->get_type() == IMAGE_TYPE_UINT8
         && proxy->image->channels() <= 4)
         use_png_format = true;
-
+#ifdef MVE_NO_PNG_SUPPORT
+    use_png_format = false;
+#endif
     std::string filename = proxy->name + (use_png_format ? ".png" : ".mvei");
     std::string fname_orig = util::fs::join_path(this->path, proxy->filename);
     std::string fname_save = util::fs::join_path(this->path, filename);
@@ -855,11 +857,15 @@ View::save_image_intern (ImageProxy* proxy)
 
     /* Save the new image. */
     //std::cout << "View: Saving image: " << filename << std::endl;
+#ifdef MVE_NO_PNG_SUPPORT
+    image::save_mvei_file(proxy->image, fname_new);
+#else
     if (use_png_format)
         image::save_png_file(
             std::dynamic_pointer_cast<ByteImage>(proxy->image), fname_new);
     else
         image::save_mvei_file(proxy->image, fname_new);
+#endif
 
     /* On succesfull write, move the new file in place. */
     this->replace_file(fname_save, fname_new);
