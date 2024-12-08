@@ -57,23 +57,6 @@ if (NOT PNG_FOUND)
 
   # zlib for libpng
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib)
-  # FIND_LIBRARY(ZLIB_LIBRARIES
-  # NAMES
-  #   zlib
-  # PATHS
-  #   ${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib
-  #   ${CMAKE_CURRENT_BINARY_DIR}/zlib_build
-  # )
-  # FIND_PATH(ZLIB_INCLUDE_DIRS
-  # NAMES
-  # zlib.h
-  # PATHS
-  # ${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib
-  # ${CMAKE_CURRENT_BINARY_DIR}/zlib_build
-  # )
-  # message(STATUS "ZLIB_INCLUDE_DIR:" ${ZLIB_INCLUDE_DIR})
-  # message(STATUS "ZLIB_LIBRARIES:" ${ZLIB_LIBRARIES})
-
   set(ZLIB_ROOT ${CMAKE_CURRENT_BINARY_DIR}/third_party/zlib) # zlibのルートディレクトリを設定
   set(ZLIB_LIBRARY ${CMAKE_CURRENT_BINARY_DIR}/zlib/) # Static library for zlib
   if(WIN32)
@@ -81,10 +64,9 @@ if (NOT PNG_FOUND)
     set(ZLIB_LIBRARY ${ZLIB_ROOT}/$<CONFIG>/zlibstatic$<IF:$<CONFIG:Debug>,d,>.lib)
   else()
     # TODO: Really?
-    set(ZLIB_LIBRARY ${ZLIB_ROOT}/libzlib.a)
+    set(ZLIB_LIBRARY ${ZLIB_ROOT}//libz.a)
   endif()
   set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib ${ZLIB_ROOT})
-
 
   set(PNG_STATIC ON)  # Static build of libpng
   set(PNG_SHARED OFF) # No shared build of libpng
