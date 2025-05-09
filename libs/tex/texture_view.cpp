@@ -39,6 +39,31 @@ TextureView::TextureView(std::size_t id, mve::CameraInfo const & camera,
     camera.fill_world_to_cam(*world_to_cam);
 }
 
+TextureView::TextureView(std::size_t id, mve::CameraInfo const& camera,
+    mve::ByteImage::Ptr const image, mve::ByteImage::Ptr const outlier_mask) : id(id), image_file("") {
+
+        this->image = mve::ByteImage::create(*image);
+
+        if (outlier_mask != nullptr) {
+            this->outlier_mask = mve::ByteImage::create(*outlier_mask);
+            if (this->outlier_mask->channels() != 1) {
+                throw std::runtime_error("Outlier mask must have 1 channel");
+            }
+            if (this->image->width() != this->outlier_mask->width() ||
+                this->image->height() != this->outlier_mask->height()) {
+                throw std::runtime_error("Image and outlier mask must have the same dimensions");
+            }
+        }
+
+        width = image->width();
+        height = image->height();
+
+        camera.fill_calibration(*projection, width, height);
+        camera.fill_camera_pos(*pos);
+        camera.fill_viewing_direction(*viewdir);
+        camera.fill_world_to_cam(*world_to_cam);
+}
+
 void
 TextureView::generate_validity_mask(void) {
     assert(image != NULL);
@@ -96,6 +121,11 @@ TextureView::generate_validity_mask(void) {
 void
 TextureView::load_image(void) {
     if(image != NULL) return;
+
+    if (image_file.empty() && image->valid()) {
+        return;
+    }
+
     image = mve::image::load_file(image_file);
 }
 
@@ -150,6 +180,30 @@ TextureView::get_face_info(math::Vec3f const & v1, math::Vec3f const & v2,
     if (area < std::numeric_limits<float>::epsilon()) {
         face_info->quality = 0.0f;
         return;
+    }
+
+    if (settings.use_mask && outlier_mask != nullptr && outlier_mask->valid()) {
+        Rect<float> aabb = tri.get_aabb();
+        // Loop over the bounding box of the triangle
+        for (int y = std::floor(aabb.min_y); y < std::ceil(aabb.max_y); ++y) {
+            float min_x = aabb.min_x - 0.5f;
+            float max_x = aabb.max_x + 0.5f;
+            for (int x = std::floor(min_x + 0.5f); x < std::ceil(max_x - 0.5f); ++x) {
+
+                const float cx = static_cast<float>(x) + 0.5f;
+                const float cy = static_cast<float>(y) + 0.5f;
+                if (!tri.inside(cx, cy)) continue;
+
+                u_int8_t val = outlier_mask->at(x, y, 0);
+
+                if (val == 255) {
+                    // Set quality to 0.0f if a pixel inside the triangle is invalid
+                    face_info->quality = 0.0f;
+                    return;
+                }
+            }
+        }
+
     }
 
     std::size_t num_samples = 0;
