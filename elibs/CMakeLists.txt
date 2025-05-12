@@ -11,8 +11,8 @@ externalproject_add(ext_mapmap
 
 externalproject_add(ext_rayint
     PREFIX          ext_rayint
-    GIT_REPOSITORY  https://github.com/nmoehrle/rayint.git
-    GIT_TAG         cuda
+    GIT_REPOSITORY  https://github.com/unclearness/rayint.git
+    GIT_TAG         cuda_c++17
     UPDATE_COMMAND  ""
     SOURCE_DIR      ${CMAKE_SOURCE_DIR}/elibs/rayint
     CONFIGURE_COMMAND ""
@@ -32,7 +32,8 @@ externalproject_add(ext_eigen
 
 externalproject_add(ext_mve
     PREFIX          mve
-    GIT_REPOSITORY  https://github.com/nmoehrle/mve.git
+    GIT_REPOSITORY  https://github.com/unclearness/mve.git
+    GIT_TAG         c++17
     UPDATE_COMMAND  ""
     SOURCE_DIR      ${CMAKE_SOURCE_DIR}/elibs/mve
     CONFIGURE_COMMAND ""
