@@ -18,8 +18,8 @@
 TEX_NAMESPACE_BEGIN
 
 TextureView::TextureView(std::size_t id, mve::CameraInfo const & camera,
-    std::string const & image_file)
-    : id(id), image_file(image_file) {
+    std::string const & image_file, std::string const & mask_image_file)
+    : id(id), image_file(image_file), mask_image_file(mask_image_file) {
 
     mve::image::ImageHeaders header;
     try {
@@ -37,11 +37,17 @@ TextureView::TextureView(std::size_t id, mve::CameraInfo const & camera,
     camera.fill_camera_pos(*pos);
     camera.fill_viewing_direction(*viewdir);
     camera.fill_world_to_cam(*world_to_cam);
+
+    if (mask_image_file != "") {
+        outlier_mask = mve::image::load_file(mask_image_file);
+    }
+
 }
 
 TextureView::TextureView(std::size_t id, mve::CameraInfo const& camera,
     mve::ByteImage::Ptr const image, mve::ByteImage::Ptr const outlier_mask) : id(id), image_file("") {
 
+        this->org_image = mve::ByteImage::create(*image);
         this->image = mve::ByteImage::create(*image);
 
         if (outlier_mask != nullptr) {
@@ -122,7 +128,8 @@ void
 TextureView::load_image(void) {
     if(image != NULL) return;
 
-    if (image_file.empty() && image->valid()) {
+    if (org_image != NULL && org_image->valid()) {
+        image = mve::ByteImage::create(*org_image);
         return;
     }
 

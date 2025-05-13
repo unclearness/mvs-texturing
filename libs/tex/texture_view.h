@@ -51,6 +51,8 @@ class TextureView {
         mve::ByteImage::Ptr gradient_magnitude;
         std::vector<bool> validity_mask;
 
+        mve::ByteImage::Ptr org_image;
+        std::string mask_image_file;
         mve::ByteImage::Ptr outlier_mask;
 
     public:
@@ -75,7 +77,7 @@ class TextureView {
         math::Vec3f get_pixel_values(math::Vec2f const & pixel) const;
 
         /** Constructs a TextureView from the give mve::CameraInfo containing the given image. */
-        TextureView(std::size_t id, mve::CameraInfo const & camera, std::string const & image_file);
+        TextureView(std::size_t id, mve::CameraInfo const & camera, std::string const & image_file, std::string const & mask_image_file="");
         TextureView(std::size_t id, mve::CameraInfo const & camera, mve::ByteImage::Ptr const image, mve::ByteImage::Ptr const outlier_mask = nullptr);
 
         /** Returns the position. */
