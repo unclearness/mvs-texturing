@@ -30,6 +30,19 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mfpmath=sse -funroll-loops")
 endif()
 
+option(USE_SYSTEM_EIGEN "Use system-installed Eigen3 instead of bundled elibs/eigen" OFF)
+
+if(USE_SYSTEM_EIGEN)
+  find_package(Eigen3 REQUIRED NO_MODULE)
+  message(STATUS ">>> Using system Eigen3: ${Eigen3_VERSION}")
+  set(EIGEN_INCLUDE_DIRS ${Eigen3_INCLUDE_DIR})
+  set(EIGEN_TARGET Eigen3::Eigen)
+else()
+  message(STATUS ">>> Using bundled Eigen from elibs/eigen")
+  set(EIGEN_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/elibs/eigen)
+  set(EIGEN_TARGET "")
+endif()
+
 find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(TIFF REQUIRED)
@@ -38,7 +51,7 @@ add_subdirectory(elibs)
 include_directories(SYSTEM
     ${CMAKE_SOURCE_DIR}/elibs/rayint/libs
     ${CMAKE_SOURCE_DIR}/elibs/mve/libs
-    ${CMAKE_SOURCE_DIR}/elibs/eigen
+    ${EIGEN_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/elibs/mapmap/
     ${CMAKE_SOURCE_DIR}/elibs/mapmap/mapmap
     ${CMAKE_SOURCE_DIR}/elibs/mapmap/ext/dset
