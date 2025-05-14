@@ -40,6 +40,8 @@ TextureView::TextureView(std::size_t id, mve::CameraInfo const & camera,
 
     if (mask_image_file != "") {
         outlier_mask = mve::image::load_file(mask_image_file);
+    } else {
+        outlier_mask = nullptr;
     }
 
 }
@@ -59,6 +61,8 @@ TextureView::TextureView(std::size_t id, mve::CameraInfo const& camera,
                 this->image->height() != this->outlier_mask->height()) {
                 throw std::runtime_error("Image and outlier mask must have the same dimensions");
             }
+        } else {
+            this->outlier_mask = nullptr;
         }
 
         width = image->width();
