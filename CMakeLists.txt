@@ -39,7 +39,7 @@ if(USE_SYSTEM_EIGEN)
   set(EIGEN_TARGET Eigen3::Eigen)
 else()
   message(STATUS ">>> Using bundled Eigen from elibs/eigen")
-  set(EIGEN_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/elibs/eigen)
+  set(EIGEN_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/elibs/eigen)
   set(EIGEN_TARGET "")
 endif()
 
@@ -47,14 +47,16 @@ find_package(PNG REQUIRED)
 find_package(JPEG REQUIRED)
 find_package(TIFF REQUIRED)
 
+set(ELIBS_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
 add_subdirectory(elibs)
 include_directories(SYSTEM
-    ${CMAKE_SOURCE_DIR}/elibs/rayint/libs
-    ${CMAKE_SOURCE_DIR}/elibs/mve/libs
+    ${ELIBS_ROOT_DIR}/elibs/rayint/libs
+    ${ELIBS_ROOT_DIR}/elibs/mve/libs
     ${EIGEN_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/elibs/mapmap/
-    ${CMAKE_SOURCE_DIR}/elibs/mapmap/mapmap
-    ${CMAKE_SOURCE_DIR}/elibs/mapmap/ext/dset
+    ${ELIBS_ROOT_DIR}/elibs/mapmap/
+    ${ELIBS_ROOT_DIR}/elibs/mapmap/mapmap
+    ${ELIBS_ROOT_DIR}/elibs/mapmap/ext/dset
 )
 
 include_directories(
