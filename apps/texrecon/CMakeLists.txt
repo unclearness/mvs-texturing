@@ -9,6 +9,12 @@ endif()
 
 add_executable(${BIN} ${SOURCES})
 set_property(TARGET ${BIN} PROPERTY INTERPROCEDURAL_OPTIMIZATION True)
-add_dependencies(${BIN} ${ELIBS_ROOT_DIR}/ext_mve)
+add_dependencies(${BIN} ext_mve)
+target_link_directories(
+    ${BIN}
+    PRIVATE
+    ${ELIBS_ROOT_DIR}/elibs/mve/libs/mve
+    ${ELIBS_ROOT_DIR}/elibs/mve/libs/util
+)
 target_link_libraries(${BIN} tex ${TBB_LIBRARIES} -lmve -lmve_util ${EIGEN_TARGET})
 install(TARGETS ${BIN} RUNTIME DESTINATION bin)
