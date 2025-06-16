@@ -66,7 +66,8 @@ build_adjacency_graph(mve::TriangleMesh::ConstPtr mesh,
 void
 calculate_data_costs(mve::TriangleMesh::ConstPtr mesh,
     TextureViews * texture_views, Settings const & settings,
-    DataCosts * data_costs);
+    DataCosts * data_costs,
+    const float ignore_angle_th = 75.0f);
 
 void
 postprocess_face_infos(Settings const & settings,

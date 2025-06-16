@@ -131,7 +131,8 @@ photometric_outlier_detection(std::vector<FaceProjectionInfo> * infos, Settings 
 void
 calculate_face_projection_infos(mve::TriangleMesh::ConstPtr mesh,
     std::vector<TextureView> * texture_views, Settings const & settings,
-    FaceProjectionInfos * face_projection_infos) {
+    FaceProjectionInfos * face_projection_infos,
+    const float ignore_angle_th) {
 
     std::vector<unsigned int> const & faces = mesh->get_faces();
     std::vector<math::Vec3f> const & vertices = mesh->get_vertices();
@@ -184,7 +185,7 @@ calculate_face_projection_infos(mve::TriangleMesh::ConstPtr mesh,
                 if (viewing_angle < 0.0f || viewing_direction.dot(view_to_face_vec) < 0.0f)
                     continue;
 
-                if (std::acos(viewing_angle) > MATH_DEG2RAD(75.0f))
+                if (std::acos(viewing_angle) > MATH_DEG2RAD(ignore_angle_th))
                     continue;
 
                 /* Projects into the valid part of the TextureView? */
@@ -307,7 +308,8 @@ postprocess_face_infos(Settings const & settings,
 
 void
 calculate_data_costs(mve::TriangleMesh::ConstPtr mesh, std::vector<TextureView> * texture_views,
-    Settings const & settings, DataCosts * data_costs) {
+    Settings const & settings, DataCosts * data_costs,
+    const float ignore_angle_th) {
 
     std::size_t const num_faces = mesh->get_faces().size() / 3;
     std::size_t const num_views = texture_views->size();
@@ -318,7 +320,7 @@ calculate_data_costs(mve::TriangleMesh::ConstPtr mesh, std::vector<TextureView> 
         throw std::runtime_error("Exeeded maximal number of views");
 
     FaceProjectionInfos face_projection_infos(num_faces);
-    calculate_face_projection_infos(mesh, texture_views, settings, &face_projection_infos);
+    calculate_face_projection_infos(mesh, texture_views, settings, &face_projection_infos, ignore_angle_th);
     postprocess_face_infos(settings, &face_projection_infos, data_costs);
 }
 
