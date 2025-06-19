@@ -56,6 +56,15 @@ poisson_blend(mve::FloatImage::ConstPtr src, mve::ByteImage::ConstPtr mask,
     assert(mask->channels() == 1);
     assert(valid_mask(mask));
 
+    if (src->width() != mask->width() || mask->width() == dest->width() ||
+        src->height() != mask->height() || mask->height() != dest->height() ||
+        src->channels() != 3 || dest->channels() != 3 ||
+        mask->channels() != 1 ||
+        !valid_mask(mask)) {
+        std::cerr << "Invalid mask for Poisson blending. Skip." << std::endl;
+        return;
+    }
+
     const int n = dest->get_pixel_amount();
     const int width = dest->width();
     const int height = dest->height();
