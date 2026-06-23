@@ -55,6 +55,8 @@ find_package(PNG)
 if (NOT PNG_FOUND)
   # If not found, build it from source
 
+  set(SKIP_INSTALL_ALL TRUE)
+
   # zlib for libpng
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/zlib)
   if (CMAKE_LIBRARY_OUTPUT_DIRECTORY)
@@ -64,7 +66,7 @@ if (NOT PNG_FOUND)
   endif()
   if(WIN32)
     #set(ZLIB_LIBRARY ${ZLIB_ROOT}/Release/zlibstatic.lib)
-    set(ZLIB_LIBRARY ${ZLIB_ROOT}/$<CONFIG>/zlibstatic$<IF:$<CONFIG:Debug>,d,>.lib)
+    set(ZLIB_LIBRARY ${ZLIB_ROOT}/Release/zlibstatic.lib)
   else()
     # TODO: Really?
     set(ZLIB_LIBRARY ${ZLIB_ROOT}/libz.a)
@@ -90,11 +92,18 @@ if (NOT PNG_FOUND)
   # TODO: Fix
   cmake_policy(SET CMP0079 NEW)
 
-  # Need explcitly link zlib
-  target_link_libraries(png_static PRIVATE ${ZLIB_LIBRARY})
+  # Need explicit build dependency on zlib. Consumers link zlib through
+  # PNG_LIBRARIES below; keep png_static from exporting the vendored
+  # ZLIB::ZLIB item because it becomes a literal linker input on MSVC.
+  if(TARGET zlibstatic)
+    add_dependencies(png_static zlibstatic)
+  endif()
+  if(TARGET png_static)
+    set_target_properties(png_static PROPERTIES INTERFACE_LINK_LIBRARIES "")
+  endif()
 
   if(WIN32)
-    set(PNG_LIBRARY ${LIBPNG_ROOT}/$<CONFIG>/libpng16_static$<IF:$<CONFIG:Debug>,d,>.lib)
+    set(PNG_LIBRARY png_static)
   else()
     # TODO: Really?
     set(PNG_LIBRARY ${LIBPNG_ROOT}/libpng.a)
