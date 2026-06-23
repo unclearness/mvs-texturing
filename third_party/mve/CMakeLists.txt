@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.11)
 
 project(MVE)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -44,7 +44,9 @@ endif()
 include(CPack)
 
 if(NOT APPLE)
-find_package(OpenMP REQUIRED)
+#find_package(OpenMP REQUIRED)
+find_package(OpenMP REQUIRED COMPONENTS C CXX)
+message("OpenMP_FOUND: ${OpenMP_FOUND}")
 add_compile_options(${OpenMP_CXX_FLAGS})
 endif()
 
